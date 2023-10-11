@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Client</title>
+</head>
+<body>
+<h1>WebSocket Client</h1>
+
+<div id="messages"></div>
+<input type="text" id="messageInput" placeholder="Type a message">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    // 웹소켓 서버에 연결할 주소를 설정
+    const socket = new WebSocket("ws://localhost:8080/websocket");
+
+    // 연결이 열렸을 때 실행될 함수
+    socket.onopen = () => {
+        console.log("웹소켓 연결이 열렸습니다.");
+    };
+
+    // 메시지를 수신했을 때 실행될 함수
+    socket.onmessage = (event) => {
+        const messagesDiv = document.getElementById("messages");
+        messagesDiv.innerHTML += `<p>Received: ${event.data}</p>`;
+    };
+
+    // 연결이 닫혔을 때 실행될 함수
+    socket.onclose = () => {
+        console.log("웹소켓 연결이 닫혔습니다.");
+    };
+
+    // 오류가 발생했을 때 실행될 함수
+    socket.onerror = (error) => {
+        console.error("웹소켓 오류:", error);
+    };
+
+    // 메시지를 서버로 전송하는 함수
+    function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value;
+        socket.send(message);
+        messageInput.value = "";
+    }
+</script>
+</body>
+</html>
